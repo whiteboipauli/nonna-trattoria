@@ -1,0 +1,1463 @@
+{
+ "basis": {
+  "datei": "basis.webp",
+  "breite": 1400,
+  "hoehe": 1400,
+  "mitteX": 702.1,
+  "mitteY": 701.0,
+  "radius": 595.4,
+  "hinweis": "Pizza freigestellt, nur Tomate, kein Käse. Platzierung der Zutaten: Radius*0.78 (gebacken) bis *0.80 (frisch) um die Mitte"
+ },
+ "zutaten": {
+  "fior-di-latte": {
+   "stuecke": [
+    {
+     "datei": "fior-di-latte/fior-di-latte_01.webp",
+     "breite": 312,
+     "hoehe": 301
+    },
+    {
+     "datei": "fior-di-latte/fior-di-latte_02.webp",
+     "breite": 209,
+     "hoehe": 248
+    },
+    {
+     "datei": "fior-di-latte/fior-di-latte_03.webp",
+     "breite": 183,
+     "hoehe": 224
+    },
+    {
+     "datei": "fior-di-latte/fior-di-latte_04.webp",
+     "breite": 308,
+     "hoehe": 350
+    },
+    {
+     "datei": "fior-di-latte/fior-di-latte_05.webp",
+     "breite": 256,
+     "hoehe": 269
+    },
+    {
+     "datei": "fior-di-latte/fior-di-latte_06.webp",
+     "breite": 304,
+     "hoehe": 292
+    },
+    {
+     "datei": "fior-di-latte/fior-di-latte_07.webp",
+     "breite": 186,
+     "hoehe": 192
+    },
+    {
+     "datei": "fior-di-latte/fior-di-latte_08.webp",
+     "breite": 240,
+     "hoehe": 275
+    },
+    {
+     "datei": "fior-di-latte/fior-di-latte_09.webp",
+     "breite": 269,
+     "hoehe": 304
+    },
+    {
+     "datei": "fior-di-latte/fior-di-latte_10.webp",
+     "breite": 195,
+     "hoehe": 282
+    },
+    {
+     "datei": "fior-di-latte/fior-di-latte_11.webp",
+     "breite": 275,
+     "hoehe": 269
+    },
+    {
+     "datei": "fior-di-latte/fior-di-latte_12.webp",
+     "breite": 342,
+     "hoehe": 312
+    },
+    {
+     "datei": "fior-di-latte/fior-di-latte_13.webp",
+     "breite": 292,
+     "hoehe": 281
+    },
+    {
+     "datei": "fior-di-latte/fior-di-latte_14.webp",
+     "breite": 267,
+     "hoehe": 250
+    },
+    {
+     "datei": "fior-di-latte/fior-di-latte_15.webp",
+     "breite": 302,
+     "hoehe": 201
+    },
+    {
+     "datei": "fior-di-latte/fior-di-latte_16.webp",
+     "breite": 302,
+     "hoehe": 308
+    }
+   ],
+   "ebene": 0,
+   "skalaVonBis": [
+    0.62,
+    0.86
+   ],
+   "glanz": false,
+   "schatten": {
+    "blur": 3.0,
+    "versatz": 1.5,
+    "deckkraft": 0.3
+   }
+  },
+  "buffelmozzarella": {
+   "stuecke": [
+    {
+     "datei": "buffelmozzarella/buffelmozzarella_01.webp",
+     "breite": 251,
+     "hoehe": 257
+    },
+    {
+     "datei": "buffelmozzarella/buffelmozzarella_02.webp",
+     "breite": 262,
+     "hoehe": 219
+    },
+    {
+     "datei": "buffelmozzarella/buffelmozzarella_03.webp",
+     "breite": 263,
+     "hoehe": 266
+    },
+    {
+     "datei": "buffelmozzarella/buffelmozzarella_04.webp",
+     "breite": 247,
+     "hoehe": 202
+    },
+    {
+     "datei": "buffelmozzarella/buffelmozzarella_05.webp",
+     "breite": 249,
+     "hoehe": 211
+    },
+    {
+     "datei": "buffelmozzarella/buffelmozzarella_06.webp",
+     "breite": 225,
+     "hoehe": 224
+    },
+    {
+     "datei": "buffelmozzarella/buffelmozzarella_07.webp",
+     "breite": 284,
+     "hoehe": 245
+    },
+    {
+     "datei": "buffelmozzarella/buffelmozzarella_08.webp",
+     "breite": 246,
+     "hoehe": 275
+    },
+    {
+     "datei": "buffelmozzarella/buffelmozzarella_09.webp",
+     "breite": 247,
+     "hoehe": 215
+    },
+    {
+     "datei": "buffelmozzarella/buffelmozzarella_10.webp",
+     "breite": 253,
+     "hoehe": 267
+    },
+    {
+     "datei": "buffelmozzarella/buffelmozzarella_11.webp",
+     "breite": 260,
+     "hoehe": 208
+    },
+    {
+     "datei": "buffelmozzarella/buffelmozzarella_12.webp",
+     "breite": 267,
+     "hoehe": 269
+    }
+   ],
+   "ebene": 0,
+   "skalaVonBis": [
+    0.6,
+    0.76
+   ],
+   "glanz": false,
+   "schatten": {
+    "blur": 5.0,
+    "versatz": 2.5,
+    "deckkraft": 0.4
+   }
+  },
+  "gorgonzola": {
+   "stuecke": [
+    {
+     "datei": "gorgonzola/gorgonzola_01.webp",
+     "breite": 314,
+     "hoehe": 301
+    },
+    {
+     "datei": "gorgonzola/gorgonzola_02.webp",
+     "breite": 346,
+     "hoehe": 247
+    },
+    {
+     "datei": "gorgonzola/gorgonzola_03.webp",
+     "breite": 287,
+     "hoehe": 300
+    },
+    {
+     "datei": "gorgonzola/gorgonzola_04.webp",
+     "breite": 266,
+     "hoehe": 273
+    },
+    {
+     "datei": "gorgonzola/gorgonzola_05.webp",
+     "breite": 295,
+     "hoehe": 286
+    },
+    {
+     "datei": "gorgonzola/gorgonzola_06.webp",
+     "breite": 160,
+     "hoehe": 150
+    },
+    {
+     "datei": "gorgonzola/gorgonzola_07.webp",
+     "breite": 260,
+     "hoehe": 256
+    },
+    {
+     "datei": "gorgonzola/gorgonzola_08.webp",
+     "breite": 149,
+     "hoehe": 142
+    },
+    {
+     "datei": "gorgonzola/gorgonzola_09.webp",
+     "breite": 238,
+     "hoehe": 256
+    },
+    {
+     "datei": "gorgonzola/gorgonzola_10.webp",
+     "breite": 156,
+     "hoehe": 161
+    },
+    {
+     "datei": "gorgonzola/gorgonzola_11.webp",
+     "breite": 286,
+     "hoehe": 301
+    },
+    {
+     "datei": "gorgonzola/gorgonzola_12.webp",
+     "breite": 264,
+     "hoehe": 241
+    },
+    {
+     "datei": "gorgonzola/gorgonzola_13.webp",
+     "breite": 296,
+     "hoehe": 267
+    },
+    {
+     "datei": "gorgonzola/gorgonzola_14.webp",
+     "breite": 161,
+     "hoehe": 139
+    },
+    {
+     "datei": "gorgonzola/gorgonzola_15.webp",
+     "breite": 226,
+     "hoehe": 239
+    },
+    {
+     "datei": "gorgonzola/gorgonzola_16.webp",
+     "breite": 306,
+     "hoehe": 294
+    }
+   ],
+   "ebene": 0,
+   "skalaVonBis": [
+    0.6,
+    0.8
+   ],
+   "glanz": false,
+   "schatten": {
+    "blur": 3.0,
+    "versatz": 1.5,
+    "deckkraft": 0.3
+   }
+  },
+  "salami": {
+   "stuecke": [
+    {
+     "datei": "salami/salami_01.webp",
+     "breite": 233,
+     "hoehe": 247
+    },
+    {
+     "datei": "salami/salami_02.webp",
+     "breite": 237,
+     "hoehe": 251
+    },
+    {
+     "datei": "salami/salami_03.webp",
+     "breite": 241,
+     "hoehe": 249
+    },
+    {
+     "datei": "salami/salami_04.webp",
+     "breite": 233,
+     "hoehe": 246
+    },
+    {
+     "datei": "salami/salami_05.webp",
+     "breite": 208,
+     "hoehe": 238
+    },
+    {
+     "datei": "salami/salami_06.webp",
+     "breite": 237,
+     "hoehe": 233
+    },
+    {
+     "datei": "salami/salami_07.webp",
+     "breite": 235,
+     "hoehe": 243
+    },
+    {
+     "datei": "salami/salami_08.webp",
+     "breite": 241,
+     "hoehe": 243
+    },
+    {
+     "datei": "salami/salami_09.webp",
+     "breite": 230,
+     "hoehe": 239
+    },
+    {
+     "datei": "salami/salami_10.webp",
+     "breite": 241,
+     "hoehe": 239
+    },
+    {
+     "datei": "salami/salami_11.webp",
+     "breite": 234,
+     "hoehe": 245
+    },
+    {
+     "datei": "salami/salami_12.webp",
+     "breite": 242,
+     "hoehe": 247
+    },
+    {
+     "datei": "salami/salami_13.webp",
+     "breite": 229,
+     "hoehe": 243
+    },
+    {
+     "datei": "salami/salami_14.webp",
+     "breite": 234,
+     "hoehe": 232
+    },
+    {
+     "datei": "salami/salami_15.webp",
+     "breite": 228,
+     "hoehe": 228
+    },
+    {
+     "datei": "salami/salami_16.webp",
+     "breite": 236,
+     "hoehe": 241
+    }
+   ],
+   "ebene": 1,
+   "skalaVonBis": [
+    0.8,
+    0.92
+   ],
+   "glanz": true,
+   "schatten": {
+    "blur": 3.5,
+    "versatz": 1.6,
+    "deckkraft": 0.38
+   }
+  },
+  "champignons": {
+   "stuecke": [
+    {
+     "datei": "champignons/champignons_01.webp",
+     "breite": 280,
+     "hoehe": 291
+    },
+    {
+     "datei": "champignons/champignons_02.webp",
+     "breite": 245,
+     "hoehe": 201
+    },
+    {
+     "datei": "champignons/champignons_03.webp",
+     "breite": 278,
+     "hoehe": 306
+    },
+    {
+     "datei": "champignons/champignons_04.webp",
+     "breite": 264,
+     "hoehe": 283
+    },
+    {
+     "datei": "champignons/champignons_05.webp",
+     "breite": 225,
+     "hoehe": 229
+    },
+    {
+     "datei": "champignons/champignons_06.webp",
+     "breite": 232,
+     "hoehe": 256
+    },
+    {
+     "datei": "champignons/champignons_07.webp",
+     "breite": 247,
+     "hoehe": 235
+    },
+    {
+     "datei": "champignons/champignons_08.webp",
+     "breite": 182,
+     "hoehe": 258
+    },
+    {
+     "datei": "champignons/champignons_09.webp",
+     "breite": 191,
+     "hoehe": 196
+    },
+    {
+     "datei": "champignons/champignons_10.webp",
+     "breite": 280,
+     "hoehe": 267
+    },
+    {
+     "datei": "champignons/champignons_11.webp",
+     "breite": 232,
+     "hoehe": 228
+    },
+    {
+     "datei": "champignons/champignons_12.webp",
+     "breite": 250,
+     "hoehe": 251
+    },
+    {
+     "datei": "champignons/champignons_13.webp",
+     "breite": 204,
+     "hoehe": 237
+    },
+    {
+     "datei": "champignons/champignons_14.webp",
+     "breite": 268,
+     "hoehe": 214
+    },
+    {
+     "datei": "champignons/champignons_15.webp",
+     "breite": 217,
+     "hoehe": 213
+    },
+    {
+     "datei": "champignons/champignons_16.webp",
+     "breite": 246,
+     "hoehe": 258
+    },
+    {
+     "datei": "champignons/champignons_17.webp",
+     "breite": 222,
+     "hoehe": 187
+    },
+    {
+     "datei": "champignons/champignons_18.webp",
+     "breite": 246,
+     "hoehe": 258
+    },
+    {
+     "datei": "champignons/champignons_19.webp",
+     "breite": 258,
+     "hoehe": 260
+    }
+   ],
+   "ebene": 1,
+   "skalaVonBis": [
+    0.62,
+    0.78
+   ],
+   "glanz": false,
+   "schatten": {
+    "blur": 3.5,
+    "versatz": 1.6,
+    "deckkraft": 0.38
+   }
+  },
+  "zwiebeln": {
+   "stuecke": [
+    {
+     "datei": "zwiebeln/zwiebeln_01.webp",
+     "breite": 216,
+     "hoehe": 283
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_02.webp",
+     "breite": 277,
+     "hoehe": 189
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_03.webp",
+     "breite": 217,
+     "hoehe": 132
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_04.webp",
+     "breite": 242,
+     "hoehe": 194
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_05.webp",
+     "breite": 229,
+     "hoehe": 268
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_06.webp",
+     "breite": 77,
+     "hoehe": 217
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_07.webp",
+     "breite": 154,
+     "hoehe": 250
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_08.webp",
+     "breite": 191,
+     "hoehe": 277
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_09.webp",
+     "breite": 222,
+     "hoehe": 248
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_10.webp",
+     "breite": 190,
+     "hoehe": 93
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_11.webp",
+     "breite": 197,
+     "hoehe": 362
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_12.webp",
+     "breite": 266,
+     "hoehe": 221
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_13.webp",
+     "breite": 234,
+     "hoehe": 239
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_14.webp",
+     "breite": 194,
+     "hoehe": 243
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_15.webp",
+     "breite": 204,
+     "hoehe": 272
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_16.webp",
+     "breite": 152,
+     "hoehe": 271
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_17.webp",
+     "breite": 176,
+     "hoehe": 173
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_18.webp",
+     "breite": 208,
+     "hoehe": 237
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_19.webp",
+     "breite": 180,
+     "hoehe": 282
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_20.webp",
+     "breite": 239,
+     "hoehe": 258
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_21.webp",
+     "breite": 257,
+     "hoehe": 181
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_22.webp",
+     "breite": 167,
+     "hoehe": 206
+    },
+    {
+     "datei": "zwiebeln/zwiebeln_23.webp",
+     "breite": 254,
+     "hoehe": 248
+    }
+   ],
+   "ebene": 1,
+   "skalaVonBis": [
+    0.58,
+    0.74
+   ],
+   "glanz": false,
+   "schatten": {
+    "blur": 2.5,
+    "versatz": 1.2,
+    "deckkraft": 0.32
+   }
+  },
+  "oliven": {
+   "stuecke": [
+    {
+     "datei": "oliven/oliven_01.webp",
+     "breite": 151,
+     "hoehe": 167
+    },
+    {
+     "datei": "oliven/oliven_02.webp",
+     "breite": 135,
+     "hoehe": 132
+    },
+    {
+     "datei": "oliven/oliven_03.webp",
+     "breite": 146,
+     "hoehe": 159
+    },
+    {
+     "datei": "oliven/oliven_04.webp",
+     "breite": 160,
+     "hoehe": 152
+    },
+    {
+     "datei": "oliven/oliven_05.webp",
+     "breite": 163,
+     "hoehe": 165
+    },
+    {
+     "datei": "oliven/oliven_06.webp",
+     "breite": 163,
+     "hoehe": 169
+    },
+    {
+     "datei": "oliven/oliven_07.webp",
+     "breite": 135,
+     "hoehe": 129
+    },
+    {
+     "datei": "oliven/oliven_08.webp",
+     "breite": 142,
+     "hoehe": 166
+    },
+    {
+     "datei": "oliven/oliven_09.webp",
+     "breite": 152,
+     "hoehe": 170
+    },
+    {
+     "datei": "oliven/oliven_10.webp",
+     "breite": 156,
+     "hoehe": 150
+    },
+    {
+     "datei": "oliven/oliven_11.webp",
+     "breite": 163,
+     "hoehe": 154
+    },
+    {
+     "datei": "oliven/oliven_12.webp",
+     "breite": 145,
+     "hoehe": 174
+    },
+    {
+     "datei": "oliven/oliven_13.webp",
+     "breite": 166,
+     "hoehe": 150
+    },
+    {
+     "datei": "oliven/oliven_14.webp",
+     "breite": 148,
+     "hoehe": 150
+    },
+    {
+     "datei": "oliven/oliven_15.webp",
+     "breite": 160,
+     "hoehe": 161
+    },
+    {
+     "datei": "oliven/oliven_16.webp",
+     "breite": 154,
+     "hoehe": 161
+    },
+    {
+     "datei": "oliven/oliven_17.webp",
+     "breite": 149,
+     "hoehe": 149
+    },
+    {
+     "datei": "oliven/oliven_18.webp",
+     "breite": 165,
+     "hoehe": 168
+    },
+    {
+     "datei": "oliven/oliven_19.webp",
+     "breite": 156,
+     "hoehe": 157
+    },
+    {
+     "datei": "oliven/oliven_20.webp",
+     "breite": 139,
+     "hoehe": 133
+    },
+    {
+     "datei": "oliven/oliven_21.webp",
+     "breite": 126,
+     "hoehe": 131
+    },
+    {
+     "datei": "oliven/oliven_22.webp",
+     "breite": 147,
+     "hoehe": 161
+    },
+    {
+     "datei": "oliven/oliven_23.webp",
+     "breite": 150,
+     "hoehe": 159
+    }
+   ],
+   "ebene": 1,
+   "skalaVonBis": [
+    0.48,
+    0.58
+   ],
+   "glanz": true,
+   "schatten": {
+    "blur": 4.0,
+    "versatz": 2.0,
+    "deckkraft": 0.42
+   }
+  },
+  "kirschtomaten": {
+   "stuecke": [
+    {
+     "datei": "kirschtomaten/kirschtomaten_01.webp",
+     "breite": 221,
+     "hoehe": 232
+    },
+    {
+     "datei": "kirschtomaten/kirschtomaten_02.webp",
+     "breite": 217,
+     "hoehe": 228
+    },
+    {
+     "datei": "kirschtomaten/kirschtomaten_03.webp",
+     "breite": 232,
+     "hoehe": 232
+    },
+    {
+     "datei": "kirschtomaten/kirschtomaten_04.webp",
+     "breite": 222,
+     "hoehe": 237
+    },
+    {
+     "datei": "kirschtomaten/kirschtomaten_05.webp",
+     "breite": 225,
+     "hoehe": 221
+    },
+    {
+     "datei": "kirschtomaten/kirschtomaten_06.webp",
+     "breite": 222,
+     "hoehe": 221
+    },
+    {
+     "datei": "kirschtomaten/kirschtomaten_07.webp",
+     "breite": 228,
+     "hoehe": 231
+    },
+    {
+     "datei": "kirschtomaten/kirschtomaten_08.webp",
+     "breite": 226,
+     "hoehe": 230
+    },
+    {
+     "datei": "kirschtomaten/kirschtomaten_09.webp",
+     "breite": 232,
+     "hoehe": 234
+    },
+    {
+     "datei": "kirschtomaten/kirschtomaten_10.webp",
+     "breite": 202,
+     "hoehe": 217
+    },
+    {
+     "datei": "kirschtomaten/kirschtomaten_11.webp",
+     "breite": 209,
+     "hoehe": 221
+    },
+    {
+     "datei": "kirschtomaten/kirschtomaten_12.webp",
+     "breite": 221,
+     "hoehe": 227
+    },
+    {
+     "datei": "kirschtomaten/kirschtomaten_13.webp",
+     "breite": 218,
+     "hoehe": 224
+    },
+    {
+     "datei": "kirschtomaten/kirschtomaten_14.webp",
+     "breite": 229,
+     "hoehe": 228
+    }
+   ],
+   "ebene": 1,
+   "skalaVonBis": [
+    0.52,
+    0.62
+   ],
+   "glanz": true,
+   "schatten": {
+    "blur": 4.5,
+    "versatz": 2.2,
+    "deckkraft": 0.42
+   }
+  },
+  "peperoncino": {
+   "stuecke": [
+    {
+     "datei": "peperoncino/peperoncino_01.webp",
+     "breite": 159,
+     "hoehe": 170
+    },
+    {
+     "datei": "peperoncino/peperoncino_02.webp",
+     "breite": 161,
+     "hoehe": 158
+    },
+    {
+     "datei": "peperoncino/peperoncino_03.webp",
+     "breite": 167,
+     "hoehe": 165
+    },
+    {
+     "datei": "peperoncino/peperoncino_04.webp",
+     "breite": 151,
+     "hoehe": 190
+    },
+    {
+     "datei": "peperoncino/peperoncino_05.webp",
+     "breite": 180,
+     "hoehe": 162
+    },
+    {
+     "datei": "peperoncino/peperoncino_06.webp",
+     "breite": 129,
+     "hoehe": 196
+    },
+    {
+     "datei": "peperoncino/peperoncino_07.webp",
+     "breite": 152,
+     "hoehe": 178
+    },
+    {
+     "datei": "peperoncino/peperoncino_08.webp",
+     "breite": 126,
+     "hoehe": 147
+    },
+    {
+     "datei": "peperoncino/peperoncino_09.webp",
+     "breite": 237,
+     "hoehe": 275
+    },
+    {
+     "datei": "peperoncino/peperoncino_10.webp",
+     "breite": 148,
+     "hoehe": 141
+    },
+    {
+     "datei": "peperoncino/peperoncino_11.webp",
+     "breite": 137,
+     "hoehe": 122
+    },
+    {
+     "datei": "peperoncino/peperoncino_12.webp",
+     "breite": 163,
+     "hoehe": 227
+    },
+    {
+     "datei": "peperoncino/peperoncino_13.webp",
+     "breite": 164,
+     "hoehe": 164
+    },
+    {
+     "datei": "peperoncino/peperoncino_14.webp",
+     "breite": 143,
+     "hoehe": 143
+    },
+    {
+     "datei": "peperoncino/peperoncino_15.webp",
+     "breite": 131,
+     "hoehe": 197
+    },
+    {
+     "datei": "peperoncino/peperoncino_16.webp",
+     "breite": 254,
+     "hoehe": 227
+    },
+    {
+     "datei": "peperoncino/peperoncino_17.webp",
+     "breite": 106,
+     "hoehe": 207
+    },
+    {
+     "datei": "peperoncino/peperoncino_18.webp",
+     "breite": 139,
+     "hoehe": 165
+    },
+    {
+     "datei": "peperoncino/peperoncino_19.webp",
+     "breite": 166,
+     "hoehe": 148
+    },
+    {
+     "datei": "peperoncino/peperoncino_20.webp",
+     "breite": 204,
+     "hoehe": 113
+    },
+    {
+     "datei": "peperoncino/peperoncino_21.webp",
+     "breite": 138,
+     "hoehe": 137
+    },
+    {
+     "datei": "peperoncino/peperoncino_22.webp",
+     "breite": 159,
+     "hoehe": 161
+    },
+    {
+     "datei": "peperoncino/peperoncino_23.webp",
+     "breite": 155,
+     "hoehe": 163
+    },
+    {
+     "datei": "peperoncino/peperoncino_24.webp",
+     "breite": 153,
+     "hoehe": 148
+    },
+    {
+     "datei": "peperoncino/peperoncino_25.webp",
+     "breite": 269,
+     "hoehe": 238
+    },
+    {
+     "datei": "peperoncino/peperoncino_26.webp",
+     "breite": 181,
+     "hoehe": 133
+    }
+   ],
+   "ebene": 1,
+   "skalaVonBis": [
+    0.42,
+    0.56
+   ],
+   "glanz": true,
+   "schatten": {
+    "blur": 2.5,
+    "versatz": 1.2,
+    "deckkraft": 0.34
+   }
+  },
+  "knoblauch-oel": {
+   "stuecke": [
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_01.webp",
+     "breite": 134,
+     "hoehe": 135
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_02.webp",
+     "breite": 96,
+     "hoehe": 96
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_03.webp",
+     "breite": 202,
+     "hoehe": 127
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_04.webp",
+     "breite": 199,
+     "hoehe": 197
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_05.webp",
+     "breite": 319,
+     "hoehe": 311
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_06.webp",
+     "breite": 500,
+     "hoehe": 312
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_07.webp",
+     "breite": 91,
+     "hoehe": 92
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_08.webp",
+     "breite": 129,
+     "hoehe": 131
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_09.webp",
+     "breite": 97,
+     "hoehe": 100
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_10.webp",
+     "breite": 175,
+     "hoehe": 165
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_11.webp",
+     "breite": 183,
+     "hoehe": 182
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_12.webp",
+     "breite": 138,
+     "hoehe": 154
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_13.webp",
+     "breite": 107,
+     "hoehe": 111
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_14.webp",
+     "breite": 284,
+     "hoehe": 362
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_15.webp",
+     "breite": 346,
+     "hoehe": 250
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_16.webp",
+     "breite": 485,
+     "hoehe": 286
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_17.webp",
+     "breite": 203,
+     "hoehe": 204
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_18.webp",
+     "breite": 228,
+     "hoehe": 96
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_19.webp",
+     "breite": 109,
+     "hoehe": 109
+    },
+    {
+     "datei": "knoblauch-oel/knoblauch-oel_20.webp",
+     "breite": 152,
+     "hoehe": 153
+    }
+   ],
+   "ebene": 2,
+   "skalaVonBis": [
+    0.42,
+    0.62
+   ],
+   "glanz": true,
+   "schatten": {
+    "blur": 0.0,
+    "versatz": 0.0,
+    "deckkraft": 0.0
+   }
+  },
+  "prosciutto": {
+   "stuecke": [
+    {
+     "datei": "prosciutto/prosciutto_01.webp",
+     "breite": 313,
+     "hoehe": 366
+    },
+    {
+     "datei": "prosciutto/prosciutto_02.webp",
+     "breite": 341,
+     "hoehe": 280
+    },
+    {
+     "datei": "prosciutto/prosciutto_03.webp",
+     "breite": 323,
+     "hoehe": 314
+    },
+    {
+     "datei": "prosciutto/prosciutto_04.webp",
+     "breite": 347,
+     "hoehe": 307
+    },
+    {
+     "datei": "prosciutto/prosciutto_05.webp",
+     "breite": 360,
+     "hoehe": 288
+    },
+    {
+     "datei": "prosciutto/prosciutto_06.webp",
+     "breite": 281,
+     "hoehe": 338
+    },
+    {
+     "datei": "prosciutto/prosciutto_07.webp",
+     "breite": 260,
+     "hoehe": 328
+    },
+    {
+     "datei": "prosciutto/prosciutto_08.webp",
+     "breite": 319,
+     "hoehe": 315
+    },
+    {
+     "datei": "prosciutto/prosciutto_09.webp",
+     "breite": 310,
+     "hoehe": 273
+    },
+    {
+     "datei": "prosciutto/prosciutto_10.webp",
+     "breite": 347,
+     "hoehe": 304
+    },
+    {
+     "datei": "prosciutto/prosciutto_11.webp",
+     "breite": 339,
+     "hoehe": 237
+    },
+    {
+     "datei": "prosciutto/prosciutto_12.webp",
+     "breite": 320,
+     "hoehe": 334
+    }
+   ],
+   "ebene": 2,
+   "skalaVonBis": [
+    0.8,
+    0.95
+   ],
+   "glanz": false,
+   "schatten": {
+    "blur": 5.0,
+    "versatz": 2.5,
+    "deckkraft": 0.4
+   }
+  },
+  "parmesan": {
+   "stuecke": [
+    {
+     "datei": "parmesan/parmesan_01.webp",
+     "breite": 260,
+     "hoehe": 254
+    },
+    {
+     "datei": "parmesan/parmesan_02.webp",
+     "breite": 221,
+     "hoehe": 227
+    },
+    {
+     "datei": "parmesan/parmesan_03.webp",
+     "breite": 147,
+     "hoehe": 262
+    },
+    {
+     "datei": "parmesan/parmesan_04.webp",
+     "breite": 273,
+     "hoehe": 323
+    },
+    {
+     "datei": "parmesan/parmesan_05.webp",
+     "breite": 221,
+     "hoehe": 234
+    },
+    {
+     "datei": "parmesan/parmesan_06.webp",
+     "breite": 215,
+     "hoehe": 246
+    },
+    {
+     "datei": "parmesan/parmesan_07.webp",
+     "breite": 256,
+     "hoehe": 265
+    },
+    {
+     "datei": "parmesan/parmesan_08.webp",
+     "breite": 235,
+     "hoehe": 206
+    },
+    {
+     "datei": "parmesan/parmesan_09.webp",
+     "breite": 269,
+     "hoehe": 345
+    },
+    {
+     "datei": "parmesan/parmesan_10.webp",
+     "breite": 173,
+     "hoehe": 230
+    },
+    {
+     "datei": "parmesan/parmesan_11.webp",
+     "breite": 227,
+     "hoehe": 221
+    },
+    {
+     "datei": "parmesan/parmesan_12.webp",
+     "breite": 256,
+     "hoehe": 228
+    },
+    {
+     "datei": "parmesan/parmesan_13.webp",
+     "breite": 260,
+     "hoehe": 268
+    },
+    {
+     "datei": "parmesan/parmesan_14.webp",
+     "breite": 245,
+     "hoehe": 246
+    },
+    {
+     "datei": "parmesan/parmesan_15.webp",
+     "breite": 177,
+     "hoehe": 178
+    },
+    {
+     "datei": "parmesan/parmesan_16.webp",
+     "breite": 277,
+     "hoehe": 256
+    },
+    {
+     "datei": "parmesan/parmesan_17.webp",
+     "breite": 110,
+     "hoehe": 174
+    },
+    {
+     "datei": "parmesan/parmesan_18.webp",
+     "breite": 376,
+     "hoehe": 221
+    },
+    {
+     "datei": "parmesan/parmesan_19.webp",
+     "breite": 322,
+     "hoehe": 258
+    }
+   ],
+   "ebene": 2,
+   "skalaVonBis": [
+    0.52,
+    0.64
+   ],
+   "glanz": false,
+   "schatten": {
+    "blur": 3.0,
+    "versatz": 1.5,
+    "deckkraft": 0.32
+   }
+  },
+  "rucola": {
+   "stuecke": [
+    {
+     "datei": "rucola/rucola_01.webp",
+     "breite": 288,
+     "hoehe": 393
+    },
+    {
+     "datei": "rucola/rucola_02.webp",
+     "breite": 353,
+     "hoehe": 145
+    },
+    {
+     "datei": "rucola/rucola_03.webp",
+     "breite": 271,
+     "hoehe": 309
+    },
+    {
+     "datei": "rucola/rucola_04.webp",
+     "breite": 226,
+     "hoehe": 307
+    },
+    {
+     "datei": "rucola/rucola_05.webp",
+     "breite": 237,
+     "hoehe": 320
+    },
+    {
+     "datei": "rucola/rucola_06.webp",
+     "breite": 207,
+     "hoehe": 343
+    },
+    {
+     "datei": "rucola/rucola_07.webp",
+     "breite": 293,
+     "hoehe": 427
+    },
+    {
+     "datei": "rucola/rucola_08.webp",
+     "breite": 148,
+     "hoehe": 340
+    },
+    {
+     "datei": "rucola/rucola_09.webp",
+     "breite": 269,
+     "hoehe": 332
+    },
+    {
+     "datei": "rucola/rucola_10.webp",
+     "breite": 223,
+     "hoehe": 335
+    },
+    {
+     "datei": "rucola/rucola_11.webp",
+     "breite": 347,
+     "hoehe": 368
+    },
+    {
+     "datei": "rucola/rucola_12.webp",
+     "breite": 342,
+     "hoehe": 169
+    },
+    {
+     "datei": "rucola/rucola_13.webp",
+     "breite": 256,
+     "hoehe": 314
+    }
+   ],
+   "ebene": 3,
+   "skalaVonBis": [
+    0.58,
+    0.72
+   ],
+   "glanz": false,
+   "schatten": {
+    "blur": 3.5,
+    "versatz": 1.8,
+    "deckkraft": 0.36
+   }
+  },
+  "basilikum": {
+   "stuecke": [
+    {
+     "datei": "basilikum/basilikum_01.webp",
+     "breite": 245,
+     "hoehe": 279
+    },
+    {
+     "datei": "basilikum/basilikum_02.webp",
+     "breite": 178,
+     "hoehe": 234
+    },
+    {
+     "datei": "basilikum/basilikum_03.webp",
+     "breite": 269,
+     "hoehe": 215
+    },
+    {
+     "datei": "basilikum/basilikum_04.webp",
+     "breite": 202,
+     "hoehe": 299
+    },
+    {
+     "datei": "basilikum/basilikum_05.webp",
+     "breite": 176,
+     "hoehe": 219
+    },
+    {
+     "datei": "basilikum/basilikum_06.webp",
+     "breite": 174,
+     "hoehe": 249
+    },
+    {
+     "datei": "basilikum/basilikum_07.webp",
+     "breite": 197,
+     "hoehe": 221
+    },
+    {
+     "datei": "basilikum/basilikum_08.webp",
+     "breite": 159,
+     "hoehe": 267
+    },
+    {
+     "datei": "basilikum/basilikum_09.webp",
+     "breite": 360,
+     "hoehe": 290
+    },
+    {
+     "datei": "basilikum/basilikum_10.webp",
+     "breite": 207,
+     "hoehe": 189
+    },
+    {
+     "datei": "basilikum/basilikum_11.webp",
+     "breite": 216,
+     "hoehe": 274
+    },
+    {
+     "datei": "basilikum/basilikum_12.webp",
+     "breite": 180,
+     "hoehe": 228
+    },
+    {
+     "datei": "basilikum/basilikum_13.webp",
+     "breite": 183,
+     "hoehe": 256
+    },
+    {
+     "datei": "basilikum/basilikum_14.webp",
+     "breite": 161,
+     "hoehe": 268
+    },
+    {
+     "datei": "basilikum/basilikum_15.webp",
+     "breite": 187,
+     "hoehe": 201
+    },
+    {
+     "datei": "basilikum/basilikum_16.webp",
+     "breite": 273,
+     "hoehe": 222
+    },
+    {
+     "datei": "basilikum/basilikum_17.webp",
+     "breite": 298,
+     "hoehe": 187
+    },
+    {
+     "datei": "basilikum/basilikum_18.webp",
+     "breite": 205,
+     "hoehe": 170
+    },
+    {
+     "datei": "basilikum/basilikum_19.webp",
+     "breite": 235,
+     "hoehe": 260
+    }
+   ],
+   "ebene": 3,
+   "skalaVonBis": [
+    0.58,
+    0.72
+   ],
+   "glanz": false,
+   "schatten": {
+    "blur": 3.5,
+    "versatz": 1.8,
+    "deckkraft": 0.36
+   }
+  }
+ }
+}

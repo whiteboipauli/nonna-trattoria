@@ -1,0 +1,27 @@
+Musik der Seite: Quellen und Lizenzen
+Abgerufen am 21.10.2026 von Wikimedia Commons (Aufnahmen von Musopen).
+Umgewandelt in mp3 (128 kbit/s), Lautheit angeglichen (-18 LUFS), Stille am Anfang und Ende entfernt.
+
+01.mp3
+Titel: Konzert für 2 Mandolinen G-Dur, RV 532, II. Andante
+Komponist: Antonio Vivaldi (1678–1741), Komposition gemeinfrei
+Interpret: The Modena Chamber Orchestra
+Quelle: https://commons.wikimedia.org/wiki/File:The_Modena_Chamber_Orchestra_-_Vivaldi%27s_Concerto_for_2_Mandolins_in_G_major,_RV_532_-_II._Andante.ogg
+Datei: https://upload.wikimedia.org/wikipedia/commons/b/b3/The_Modena_Chamber_Orchestra_-_Vivaldi%27s_Concerto_for_2_Mandolins_in_G_major%2C_RV_532_-_II._Andante.ogg
+Lizenz der Aufnahme: Public Domain Mark 1.0, vom Rechteinhaber gesetzt (gemeinfrei)
+
+02.mp3
+Titel: Oboenkonzert d-Moll, op. 9 Nr. 2, II. Adagio
+Komponist: Tomaso Albinoni (1671–1751), Komposition gemeinfrei
+Interpret: Paul Arden-Taylor (Oboe)
+Quelle: https://commons.wikimedia.org/wiki/File:Albinoni,_Concerto_for_Oboe_and_Strings_No._2_in_D_minor,_Op._9,_II._Adagio.ogg
+Datei: https://upload.wikimedia.org/wikipedia/commons/d/da/Albinoni%2C_Concerto_for_Oboe_and_Strings_No._2_in_D_minor%2C_Op._9%2C_II._Adagio.ogg
+Lizenz der Aufnahme: CC0 1.0 Universal (gemeinfrei)
+
+03.mp3
+Titel: Der Winter, RV 297 (Die vier Jahreszeiten), II. Largo
+Komponist: Antonio Vivaldi (1678–1741), Komposition gemeinfrei
+Interpret: The Modena Chamber Orchestra (laut Beschreibung; die Metadaten der Datei nennen "Orpheus Chamber Orchestra")
+Quelle: https://commons.wikimedia.org/wiki/File:The_Modena_Chamber_Orchestra_-_Vivaldi%27s_Winter,_RV_297_-_II._Largo.ogg
+Datei: https://upload.wikimedia.org/wikipedia/commons/8/8b/The_Modena_Chamber_Orchestra_-_Vivaldi%27s_Winter%2C_RV_297_-_II._Largo.ogg
+Lizenz der Aufnahme: Public Domain Mark 1.0, vom Rechteinhaber gesetzt (gemeinfrei)

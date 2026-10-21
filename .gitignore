@@ -1,0 +1,55 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Prüfbilder und Browser-Protokolle
+.impeccable/review/
+.playwright-mcp/
+
+# Rohbilder der Kamerafahrt
+kamerafahrt-bilder/
+
+# Rohvideo der Kamerafahrt
+kamerafahrt-roh/
+
+# Rohordner und fremde Referenzbilder, bleiben lokal
+referenz/
+neue-bilder/
+pizza-bilder/
+
+# Arbeitsnotizen und Werkzeug-Ordner, bleiben lokal
+CLAUDE.md
+KONZEPT.md
+PRODUCT.md
+PROMPTS.md
+UEBERGABE.md
+.claude/
+.impeccable/
+
+# Schriftdateien (Lizenz), bleiben lokal
+src/assets/fonts/*.otf
+src/assets/fonts/*.ttf
+src/assets/fonts/*.woff
+src/assets/fonts/*.woff2
+src/assets/fonts/LIESMICH.txt
