@@ -2,18 +2,19 @@ import { Fragment, useLayoutEffect, useRef, useState, type CSSProperties } from 
 import { gsap } from 'gsap'
 import {
   ANFANG,
-  PARTNER_WARTEN,
-  PAUSE,
-  RAUSCHEN,
-  SCHWELLE,
-  SCHWELLE_WISCHEN,
-  SPERRE,
-  TEMPO,
+  ANSATZ,
+  BESCHLEUNIGUNG,
+  BIS_ZEIT,
+  ENDE,
+  NACHLAUF,
+  STRECKE,
+  TEMPO_MAX,
+  TEXT_WARTEN,
+  VON_ZEIT,
   stationen,
   type Station,
 } from '../data/fahrt'
 import video from '../data/fahrt-video.json'
-import { spiegeln } from '../lib/spiegeln'
 import { pfad } from '../lib/pfad'
 
 // Der Pinsel schreibt von links nach rechts. Überstände der Schwünge bleiben sichtbar (negative Ränder).
@@ -32,7 +33,13 @@ function Text({ s, erste }: { s: Station; erste: boolean }) {
           className={s.istSatz ? 'titel titel--satz' : 'titel'}
           id={`t-${s.id}`}
           // Längste Zeile in Buchstaben: am Handy wird die Schrift so gewählt, dass sie ins Bild passt.
-          style={s.istSatz ? undefined : ({ '--zl': Math.max(...s.zeilen.map((z) => z.length)) } as CSSProperties)}
+          style={
+            s.istSatz
+              ? undefined
+              : ({
+                  '--zl': Math.max(...s.zeilen.map((z) => z.length)),
+                } as CSSProperties)
+          }
         >
           {s.zeilen.map((z, i) => (
             <Fragment key={z}>
@@ -67,9 +74,8 @@ const N = video.bilder
 const FPS = video.fps
 // Ein Viertelbild hinter dem Bildanfang: Dort landet ein Sprung sicher auf dem richtigen Bild.
 const VERSATZ = 0.25 / FPS
-const spiegel = (t: number) => spiegeln(t, N, FPS)
-// Anfang des Bildes, das zur Zeit t zu sehen ist.
-const bildAnfang = (t: number) => Math.min(Math.max(Math.floor(t * FPS + 1e-6), 0), N - 1) / FPS
+// Nummer des Bildes, das zur Zeit t zu sehen ist.
+const bildNr = (t: number) => Math.min(Math.max(Math.floor(t * FPS + 1e-6), 0), N - 1)
 
 // '45% 50%' wird zu [0.45, 0.5].
 const fokusVon = (s: Station) => s.fokus.split(' ').map((w) => parseFloat(w) / 100) as [number, number]
@@ -104,53 +110,72 @@ function suche(v: HTMLVideoElement, t: number) {
   })
 }
 
-// Spielt die Kamerafahrt mit zwei Videos ab: eines vorwärts, eines rückwärts. Sichtbar ist immer nur
-// eines, das andere wartet nach jeder Ankunft schon auf dem gespiegelten Bild, damit ein
-// Richtungswechsel ohne Ruckeln startet.
-// Ladezustand des Vorwärtsvideos für die Anzeige. `prozent` ist null, wenn die Größe unbekannt ist.
+// Ladezustand des Videos für die Anzeige. `prozent` ist null, wenn die Größe unbekannt ist.
 type Ladestand = { art: 'laedt'; prozent: number | null } | { art: 'bereit' } | { art: 'fehler' }
 
+// Das Video wird nie abgespielt, nur geseekt: `setze(t)` nennt die Ziel-Videozeit, das gezeigte Bild folgt
+// ihr weich. `bei(t)` bekommt die gerade gezeigte Zeit (für Text und Ausschnitt). Das Startbild hält,
+// bis das Video geladen ist.
 function starteFilm(
-  vor: HTMLVideoElement,
-  rueck: HTMLVideoElement,
+  video: HTMLVideoElement,
   startZeit: number,
   melde: (stand: Ladestand) => void,
+  bei: (t: number, jetztMs: number) => boolean,
+  nachBild: () => void,
 ) {
   const abbruch = new AbortController()
   const urls: string[] = []
   let aus = false
-  let vorBereit = false
-  let rueckGeladen = false
-  let rueckBereit = false
-  let fliegt = false
-  let flugNr = 0
-  let sichtbar = vor
-  let partner: Promise<void> = Promise.resolve()
-  let rvfc = 0
+  let bereit = false
+  let ziel = startZeit
+  let aktuell = startZeit
+  // Aktuelles Tempo in Videosekunden pro Sekunde (bleibt zwischen den Bildern erhalten).
+  let v = 0
+  let letzteMs = 0
+  let angezeigt = -1
   let raf = 0
-
-  // Zeit im Vorwärts-Zeitstrahl, egal welches Video gerade läuft.
-  const zeitAus = (v: HTMLVideoElement, t: number) => (v === vor ? t : spiegel(t))
-  const zeit = () => zeitAus(sichtbar, sichtbar.currentTime)
 
   const ausschnitt = (t: number) => {
     const [fx, fy] = fokusBei(t)
-    const pos = `${(fx * 100).toFixed(2)}% ${(fy * 100).toFixed(2)}%`
-    vor.style.objectPosition = pos
-    rueck.style.objectPosition = pos
+    video.style.objectPosition = `${(fx * 100).toFixed(2)}% ${(fy * 100).toFixed(2)}%`
   }
 
-  const zeige = (v: HTMLVideoElement) => {
-    sichtbar = v
-    v.style.opacity = '1'
-    ;(v === vor ? rueck : vor).style.opacity = '0'
+  const plane = () => {
+    if (!raf && bereit && !aus) {
+      raf = requestAnimationFrame(schritt)
+    }
   }
 
-  // Das unsichtbare Video auf das gespiegelte Bild der aktuellen Zeit setzen.
-  const abgleichen = () => {
-    const andere = sichtbar === vor ? rueck : vor
-    if (andere === rueck && !rueckGeladen) return
-    partner = suche(andere, spiegel(sichtbar.currentTime) + VERSATZ)
+  // Ein Bild der Folgeschleife. Läuft nur weiter, solange sich etwas bewegt oder noch etwas aussteht.
+  function schritt(ms: number) {
+    raf = 0
+    if (aus) return
+    // Echte Zeit seit dem letzten Bild (aus dem Zeitstempel), nach einer Pause im ersten Bild 0.
+    const dt = letzteMs ? Math.min((ms - letzteMs) / 1000, 0.1) : 0
+    letzteMs = ms
+    const d = ziel - aktuell
+    // Verfolgung mit Höchsttempo: Wunschtempo wächst mit dem Abstand, das Tempo selbst baut sich weich auf.
+    const vSoll = Math.min(Math.max(d * ANSATZ, -TEMPO_MAX), TEMPO_MAX)
+    v += (vSoll - v) * (1 - Math.exp(-dt / BESCHLEUNIGUNG))
+    const schrittWeite = v * dt
+    if (Math.abs(d) < 0.5 / FPS || Math.abs(schrittWeite) >= Math.abs(d)) {
+      aktuell = ziel
+      v = 0
+    } else {
+      aktuell += schrittWeite
+    }
+    // currentTime nur setzen, wenn das Video nicht seekt und sich das Bild geändert hat.
+    const nr = bildNr(aktuell)
+    if (nr !== angezeigt && !video.seeking) {
+      angezeigt = nr
+      video.currentTime = nr / FPS + VERSATZ
+    }
+    ausschnitt(aktuell)
+    const offen = bei(aktuell, ms)
+    nachBild()
+    if (aktuell !== ziel || angezeigt !== nr || offen) plane()
+    // Die Schleife endet: Beim nächsten Start gibt es keinen riesigen Zeitsprung.
+    else letzteMs = 0
   }
 
   // Lädt die ganze Datei als Blob und meldet unterwegs den Fortschritt in Prozent.
@@ -228,176 +253,100 @@ function starteFilm(
     }
   }
 
-  const stoppeSchleife = (v: HTMLVideoElement) => {
-    if (rvfc && 'cancelVideoFrameCallback' in v) v.cancelVideoFrameCallback(rvfc)
-    cancelAnimationFrame(raf)
-    rvfc = 0
-    raf = 0
-  }
-
-  // Erst vorwärts laden, das Startbild hält so lange. Dann rückwärts im Hintergrund.
+  video.muted = true
   ;(async () => {
-    vor.muted = true
-    rueck.muted = true
-    await nochmal(() => laden(vor, pfad('/kamerafahrt/fahrt.mp4'), (prozent) => melde({ art: 'laedt', prozent })))
+    await nochmal(() =>
+      laden(video, pfad('/kamerafahrt/fahrt-scrub.mp4'), (prozent) => melde({ art: 'laedt', prozent })),
+    )
     if (aus) return
-    await suche(vor, startZeit)
-    ausschnitt(startZeit)
-    zeige(vor)
-    vorBereit = true
+    aktuell = ziel
+    angezeigt = bildNr(aktuell)
+    await suche(video, angezeigt / FPS + VERSATZ)
+    if (aus) return
+    ausschnitt(aktuell)
+    video.style.opacity = '1'
+    bereit = true
+    bei(aktuell, performance.now())
+    nachBild()
     melde({ art: 'bereit' })
-    // Die Rückwärts-Datei lädt still im Hintergrund, bis dahin geht es nur vorwärts.
-    await nochmal(() => laden(rueck, pfad('/kamerafahrt/fahrt-rueck.mp4')))
-    if (aus) return
-    rueckGeladen = true
-    if (!fliegt) abgleichen()
-    await partner
-    rueckBereit = true
+    plane()
   })().catch((fehler) => {
     if (aus) return
     // Ohne Video bleibt das Startbild stehen, die Ursache steht in der Konsole.
     console.error('Kamerafahrt: Video konnte nicht geladen werden.', fehler)
-    if (!vorBereit) melde({ art: 'fehler' })
+    if (!bereit) melde({ art: 'fehler' })
   })
 
   return {
-    get vorBereit() {
-      return vorBereit
+    // Läuft das Video (geladen, kein Fehler)? Nur dann kann die Seite am Ende der Strecke warten.
+    get bereit() {
+      return bereit
     },
-    get rueckBereit() {
-      return rueckBereit
+    // Hat das gezeigte Bild das Ende (BIS_ZEIT) erreicht? Ohne geladenes Video nie, aber dann gibt es keine Sperre.
+    angekommen() {
+      return bereit && aktuell >= BIS_ZEIT - 0.5 / FPS
     },
-    zeit,
-
-    // Fliegt mit gleichbleibendem Tempo zur Vorwärts-Zeit ziel. `unterwegs` bekommt bei jedem Bild die
-    // Vorwärts-Zeit, `angekommen` meldet den Halt.
-    async fliege(ziel: number, unterwegs: (t: number) => void, angekommen: () => void) {
-      const nr = ++flugNr
-      const vorwaerts = ziel > zeit()
-      const v = vorwaerts ? vor : rueck
-      const zielMedia = vorwaerts ? bildAnfang(ziel) : spiegel(ziel)
-      fliegt = true
-      if (v !== sichtbar) {
-        // Das andere Video sollte schon am gespiegelten Bild stehen, höchstens kurz darauf warten.
-        await Promise.race([partner, warte(PARTNER_WARTEN * 1000)])
-        if (aus || nr !== flugNr) return
-        zeige(v)
+    // Neue Ziel-Videozeit. Mit `sofort` springt das Bild ohne Gleiten dorthin (Resize, Rücksprung).
+    setze(t: number, sofort = false) {
+      ziel = t
+      if (sofort) {
+        aktuell = t
+        v = 0
       }
-      // Das Tempo steht vor dem Start fest und ändert sich im Flug nie, sonst ruckelt es.
-      v.playbackRate = TEMPO
-
-      const ende = () => {
-        stoppeSchleife(v)
-        v.removeEventListener('ended', ende)
-        v.pause()
-        fliegt = false
-        // Nach dem Anhalten nicht neu positionieren, damit das Bild nicht springt.
-        const t = zeit()
-        ausschnitt(t)
-        unterwegs(t)
-        abgleichen()
-        angekommen()
-      }
-
-      // Angehalten wird beim ersten angezeigten Bild, das höchstens ein halbes Bild vor dem Haltepunkt liegt.
-      const schritt = (media?: number) => {
-        if (aus || nr !== flugNr) return
-        const m = media ?? v.currentTime
-        if (m >= zielMedia - 0.5 / FPS || v.ended) return ende()
-        const t = zeitAus(v, m)
-        ausschnitt(t)
-        unterwegs(t)
-        plane()
-      }
-
-      // Bildgenau mit requestVideoFrameCallback, sonst mit requestAnimationFrame.
-      const plane = () => {
-        if ('requestVideoFrameCallback' in v) rvfc = v.requestVideoFrameCallback((_, meta) => schritt(meta.mediaTime))
-        else raf = requestAnimationFrame(() => schritt())
-      }
-
-      v.addEventListener('ended', ende)
-      await v.play().catch(() => undefined)
-      if (aus || nr !== flugNr) return
       plane()
     },
-
-    // Ohne Flug direkt auf die Vorwärts-Zeit t stellen (Logo-Klick).
-    springe(t: number) {
-      flugNr++
-      fliegt = false
-      stoppeSchleife(vor)
-      stoppeSchleife(rueck)
-      vor.pause()
-      rueck.pause()
-      if (!vorBereit) return
-      zeige(vor)
-      ausschnitt(t)
-      partner = suche(vor, t).then(() => {
-        if (rueckGeladen) return suche(rueck, spiegel(t) + VERSATZ)
-      })
-    },
-
     stop() {
       aus = true
-      flugNr++
+      cancelAnimationFrame(raf)
       abbruch.abort()
-      stoppeSchleife(vor)
-      stoppeSchleife(rueck)
-      for (const v of [vor, rueck]) {
-        v.pause()
-        v.removeAttribute('src')
-        v.load()
-      }
+      video.pause()
+      video.removeAttribute('src')
+      video.load()
       urls.forEach((u) => URL.revokeObjectURL(u))
     },
   }
 }
 
-const jetzt = () => performance.now() / 1000
-// Liegt gerade ein Dialog (Pizza, Weinkarte, Warenkorb) über der Seite? Dann nichts abfangen.
-const dialogOffen = (ziel: EventTarget | null) =>
-  document.body.style.overflow === 'hidden' ||
-  (ziel instanceof Element && !!ziel.closest('[role="dialog"], [aria-modal="true"]'))
-
-// Rundgang durch Nonnas Haus als durchgehende Kamerafahrt. Solange sie ganz im Bild ist, scrollt die
-// Seite nicht: Eine Geste löst den Flug zum nächsten oder vorigen Haltepunkt aus, das Video läuft dann
-// von selbst. Der Text jeder Haltestation schreibt sich beim Ankommen wie mit dem Pinsel.
-// Nach dem letzten Haltepunkt gibt die nächste Geste die Seite frei, sie scrollt weich zur Karte.
-// Mit "reduzierte Bewegung" stehen die Stationen als Standbilder untereinander.
+// Rundgang durch Nonnas Haus als durchgehende Kamerafahrt. Sie steht fest im Bild (sticky), während man
+// durch den hohen Abschnitt scrollt: Die Scrollposition bestimmt das Videobild, vorwärts wie rückwärts.
+// Die Texte der Stationen erscheinen nach Videozeit in ihren Fenstern, immer nur einer. Danach scrollt
+// die Seite ganz normal weiter, nachdem das Video am Ende angekommen ist (die Seite wartet am Ende der Strecke). Mit "reduzierte Bewegung" stehen die Stationen als Standbilder untereinander.
 export default function Kamerafahrt() {
   const wurzel = useRef<HTMLElement>(null)
-  const vorRef = useRef<HTMLVideoElement>(null)
-  const rueckRef = useRef<HTMLVideoElement>(null)
+  const rahmenRef = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const [reduziert] = useState(
     () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   )
-  const [ladestand, setLadestand] = useState<Ladestand>({ art: 'laedt', prozent: null })
+  const [ladestand, setLadestand] = useState<Ladestand>({
+    art: 'laedt',
+    prozent: null,
+  })
 
   useLayoutEffect(() => {
-    if (reduziert || !wurzel.current || !vorRef.current || !rueckRef.current) return
+    if (reduziert || !wurzel.current || !rahmenRef.current || !videoRef.current) return
     const abschnitt = wurzel.current
-    // Nur die Stationen mit Halt, als Nummern in `stationen`.
-    const halte = stationen.flatMap((s, i) => (s.halt && s.ruhe ? [i] : []))
-    const ruhe = (h: number) => stationen[halte[h]].ruhe ?? [0, 0]
-    const film = starteFilm(vorRef.current, rueckRef.current, ruhe(0)[1], setLadestand)
+    const rahmen = rahmenRef.current
     const texte = gsap.utils.toArray<HTMLElement>('.fahrt-text', abschnitt)
 
-    // Aktueller Haltepunkt (Nummer in `halte`).
-    let halt = 0
-    let angekommen = true
-    let ankunftZeit = -Infinity
-    let flugNr = 0
+    // Aus der Scrollposition im Abschnitt (0 bis 1) die Ziel-Videozeit.
+    const zielZeit = () => {
+      const strecke = rahmen.offsetHeight * STRECKE
+      const p = strecke > 0 ? Math.min(Math.max(-abschnitt.getBoundingClientRect().top / strecke, 0), 1) : 0
+      return VON_ZEIT + p * (BIS_ZEIT - VON_ZEIT)
+    }
+
     let sichtbar: number | null = 0
-    let aktiv = false
-    // Nach der letzten Station: frei, bis die Kamerafahrt das Bild einmal verlassen hat.
-    let freigegeben = false
+    let kandidat: number | null = 0
+    let seit = 0
 
     // Texte ab der zweiten Station warten verborgen. Die erste behält ihre CSS-Intro-Animation.
     const ctx = gsap.context(() => {
       texte.forEach((text, i) => {
         if (i === 0) return
-        gsap.set(text.querySelectorAll('[data-zeile]'), { clipPath: VERBORGEN })
+        gsap.set(text.querySelectorAll('[data-zeile]'), {
+          clipPath: VERBORGEN,
+        })
         gsap.set(text.querySelectorAll('[data-rest]'), { autoAlpha: 0, y: 14 })
       })
     }, abschnitt)
@@ -407,179 +356,157 @@ export default function Kamerafahrt() {
       const text = texte[i]
       gsap.killTweensOf(text)
       if (i === 0) {
-        gsap.to(text, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' })
+        gsap.to(text, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.4,
+          ease: 'power2.out',
+        })
         return
       }
       gsap.set(text, { autoAlpha: 1, y: 0 })
       gsap.fromTo(
         text.querySelectorAll('[data-zeile]'),
         { clipPath: VERBORGEN },
-        { clipPath: SICHTBAR, duration: 0.7, stagger: 0.18, ease: 'power2.out' },
+        {
+          clipPath: SICHTBAR,
+          duration: 0.55,
+          stagger: 0.18,
+          ease: 'power2.out',
+        },
       )
       gsap.fromTo(
         text.querySelectorAll('[data-rest]'),
         { autoAlpha: 0, y: 14 },
-        { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.12, delay: 0.35, ease: 'power2.out' },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.4,
+          stagger: 0.12,
+          delay: 0.35,
+          ease: 'power2.out',
+        },
       )
     }
 
-    // Beim Abflug geht der Text leise nach oben weg.
+    // Der Text geht leise nach oben weg.
     const versteckeText = () => {
       if (sichtbar === null) return
       gsap.killTweensOf(texte[sichtbar])
-      gsap.to(texte[sichtbar], { autoAlpha: 0, y: -18, duration: 0.35, ease: 'power2.in' })
+      gsap.to(texte[sichtbar], {
+        autoAlpha: 0,
+        y: -18,
+        duration: 0.35,
+        ease: 'power2.in',
+      })
       sichtbar = null
     }
 
-    const fliegeZu = (ziel: number) => {
-      const nr = ++flugNr
-      const vorwaerts = ziel > halt
-      const [ankunftVor, zielZeit] = ruhe(ziel)
-      // Vorwärts schreibt sich der Text bei der Ankunft, rückwärts erst am Haltepunkt.
-      const ankunft = vorwaerts ? ankunftVor : zielZeit
-      let textDa = false
-      const textZeigen = () => {
-        if (textDa || nr !== flugNr) return
-        textDa = true
-        zeigeText(halte[ziel])
+    // Station, deren Textfenster die Videozeit t enthält (sonst null).
+    const textFuer = (t: number) => {
+      const i = stationen.findIndex((s) => s.text && t >= s.text[0] && t < s.text[1])
+      return i < 0 ? null : i
+    }
+
+    // Wechselt den Text erst, wenn die Zeit TEXT_WARTEN lang im neuen Fenster war. Gibt true zurück,
+    // solange ein Wechsel noch aussteht (dann läuft die Schleife weiter).
+    const textBei = (t: number, ms: number) => {
+      const soll = textFuer(t)
+      if (soll !== kandidat) {
+        kandidat = soll
+        seit = ms
       }
+      if (kandidat === sichtbar) return false
+      if (ms - seit < TEXT_WARTEN * 1000) return true
       versteckeText()
-      halt = ziel
-      angekommen = false
-      film.fliege(
-        zielZeit,
-        (t) => {
-          if (vorwaerts && t >= ankunft) textZeigen()
-        },
-        () => {
-          if (nr !== flugNr) return
-          textZeigen()
-          angekommen = true
-          ankunftZeit = jetzt()
-        },
+      if (kandidat !== null) zeigeText(kandidat)
+      return false
+    }
+
+    // Sperre: Solange das Video bereit, aber noch nicht am Ende ist, endet das Dokument am Ende des Abschnitts.
+    // Das Attribut am html-Element wirkt über das CSS auf #root (siehe index.css).
+    const wurzelEl = document.documentElement
+    let gesetzt = false
+    const setzeEnde = () =>
+      wurzelEl.style.setProperty(
+        '--fahrt-ende',
+        `${Math.round(abschnitt.getBoundingClientRect().top + window.scrollY + abschnitt.offsetHeight)}px`,
       )
-    }
-
-    const freigeben = () => {
-      freigegeben = true
-      aktiv = false
-      document.getElementById('carta')?.scrollIntoView({ behavior: 'smooth' })
-    }
-
-    // Eine Geste: ein Haltepunkt vor (1) oder zurück (-1). Während eines Flugs zählt nichts.
-    // Bis das Vorwärtsvideo geladen ist, geht gar nichts, bis das Rückwärtsvideo da ist, nur vorwärts.
-    const geste = (r: 1 | -1) => {
-      if (!film.vorBereit || !angekommen || jetzt() - ankunftZeit < SPERRE) return
-      if (r > 0) {
-        if (halt < halte.length - 1) fliegeZu(halt + 1)
-        else freigeben()
-      } else if (halt > 0 && film.rueckBereit) {
-        fliegeZu(halt - 1)
+    const sperre = () => {
+      const soll = gesperrt()
+      if (soll === gesetzt) return
+      gesetzt = soll
+      if (soll) {
+        setzeEnde()
+        wurzelEl.setAttribute('data-fahrt-sperre', '')
+      } else {
+        wurzelEl.removeAttribute('data-fahrt-sperre')
       }
     }
 
-    // Aktiv, solange die Kamerafahrt genau im Bild steht.
-    const pruefeAktiv = () => {
-      const oben = abschnitt.getBoundingClientRect().top
-      if (freigegeben && oben < -4) freigegeben = false
-      aktiv = !freigegeben && Math.abs(oben) <= 2
-    }
+    // Wird gesetzt, sobald das Video angekommen ist; gesperrt = bereit und nicht angekommen.
+    // eslint-disable-next-line prefer-const
+    let film: ReturnType<typeof starteFilm>
+    const gesperrt = () => film.bereit && !film.angekommen()
+    film = starteFilm(videoRef.current, zielZeit(), setLadestand, textBei, sperre)
+    sperre()
 
-    // Mausrad und Trackpad: Eine Geste zählt erst nach einer kurzen Ruhe, so löst der Nachlauf
-    // eines Trackpads keine zweite Station aus.
-    let letzteEingabe = -Infinity
-    let summe = 0
-    let neueGeste = false
-    const rad = (e: WheelEvent) => {
-      if (e.ctrlKey || dialogOffen(e.target)) return
-      pruefeAktiv()
-      const d = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1)
-      if (!aktiv) {
-        // Scrollt die Seite gerade normal, zählt der Rest dieser Bewegung nicht als neue Geste.
-        if (Math.abs(d) >= RAUSCHEN) letzteEingabe = jetzt()
-        neueGeste = false
+    // Bewusstes Überspringen (Anker-Navigation): Das Ziel bleibt am Ende, bis die Seite zur Ruhe kommt,
+    // sonst würde das Video beim weichen Scrollen durch die Strecke wieder zurücklaufen.
+    let ueberspringen = false
+    let ruhe = 0
+    const beiScroll = () => {
+      if (ueberspringen) {
+        clearTimeout(ruhe)
+        ruhe = window.setTimeout(() => {
+          ueberspringen = false
+          film.setze(zielZeit())
+        }, 150)
         return
       }
-      e.preventDefault()
-      if (Math.abs(d) < RAUSCHEN) return
-      const t = jetzt()
-      if (t - letzteEingabe >= PAUSE) {
-        neueGeste = true
-        summe = 0
-      }
-      letzteEingabe = t
-      if (!neueGeste) return
-      summe += d
-      if (Math.abs(summe) >= SCHWELLE) {
-        neueGeste = false
-        geste(summe > 0 ? 1 : -1)
-      }
+      film.setze(zielZeit())
+    }
+    const beiEnde = () => {
+      ueberspringen = true
+      film.setze(BIS_ZEIT, true)
+      sperre()
+      clearTimeout(ruhe)
+      ruhe = window.setTimeout(() => {
+        ueberspringen = false
+        film.setze(zielZeit())
+      }, 400)
+    }
+    // Logo: Die Kopfzeile scrollt nach oben, das Video folgt der Scrollposition zurück an den Anfang.
+    const beiAnfang = () => {
+      ueberspringen = false
+      film.setze(zielZeit())
     }
 
-    // Wischen am Touchscreen.
-    let wischStart: number | null = null
-    const beruehrt = (e: TouchEvent) => {
-      pruefeAktiv()
-      wischStart = e.touches.length === 1 && !dialogOffen(e.target) ? e.touches[0].clientY : null
+    // Nach Größenänderung oder Rücksprung (Neuladen, Zurück-Taste) sofort das richtige Bild.
+    const sofort = () => {
+      film.setze(zielZeit(), true)
+      if (gesetzt) setzeEnde()
+      sperre()
     }
-    const wischt = (e: TouchEvent) => {
-      if (!aktiv || wischStart === null) return
-      e.preventDefault()
-      const dy = wischStart - e.touches[0].clientY
-      if (Math.abs(dy) < SCHWELLE_WISCHEN) return
-      wischStart = null
-      geste(dy > 0 ? 1 : -1)
+    const beiSeite = (e: PageTransitionEvent) => {
+      if (e.persisted) sofort()
     }
 
-    // Tastatur: Pfeile, Bild auf und ab, Leertaste. Tab und Eingaben in Feldern bleiben unberührt.
-    const taste = (e: KeyboardEvent) => {
-      if (e.altKey || e.ctrlKey || e.metaKey || dialogOffen(e.target)) return
-      const ziel = e.target instanceof Element ? e.target : null
-      if (ziel?.closest('input, textarea, select, [contenteditable="true"]')) return
-      // Leertaste auf einem Link oder Knopf löst diesen aus.
-      if (e.key === ' ' && ziel?.closest('a, button, summary, [role="button"]')) return
-      let r: 0 | 1 | -1 = 0
-      if (e.key === 'ArrowDown' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)) r = 1
-      else if (e.key === 'ArrowUp' || e.key === 'PageUp' || (e.key === ' ' && e.shiftKey)) r = -1
-      if (!r) return
-      pruefeAktiv()
-      if (!aktiv) return
-      e.preventDefault()
-      if (!e.repeat) geste(r)
-    }
-
-    // Logo oder "Trattoria della Nonna": direkt zurück auf den Anfang, ohne langen Rückflug.
-    const anfang = () => {
-      flugNr++
-      halt = 0
-      angekommen = true
-      ankunftZeit = -Infinity
-      freigegeben = false
-      film.springe(ruhe(0)[1])
-      texte.forEach((text, i) => {
-        gsap.killTweensOf(text)
-        if (i > 0) gsap.set(text, { autoAlpha: 0 })
-      })
-      gsap.set(texte[0], { autoAlpha: 1, y: 0 })
-      sichtbar = 0
-    }
-
-    pruefeAktiv()
-    window.addEventListener('wheel', rad, { passive: false })
-    window.addEventListener('touchstart', beruehrt, { passive: true })
-    window.addEventListener('touchmove', wischt, { passive: false })
-    window.addEventListener('keydown', taste)
-    window.addEventListener('scroll', pruefeAktiv, { passive: true })
-    window.addEventListener(ANFANG, anfang)
+    window.addEventListener('scroll', beiScroll, { passive: true })
+    window.addEventListener('resize', sofort)
+    window.addEventListener('pageshow', beiSeite)
+    window.addEventListener(ENDE, beiEnde)
+    window.addEventListener(ANFANG, beiAnfang)
 
     return () => {
-      window.removeEventListener('wheel', rad)
-      window.removeEventListener('touchstart', beruehrt)
-      window.removeEventListener('touchmove', wischt)
-      window.removeEventListener('keydown', taste)
-      window.removeEventListener('scroll', pruefeAktiv)
-      window.removeEventListener(ANFANG, anfang)
-      flugNr++
+      window.removeEventListener('scroll', beiScroll)
+      window.removeEventListener('resize', sofort)
+      window.removeEventListener('pageshow', beiSeite)
+      window.removeEventListener(ENDE, beiEnde)
+      window.removeEventListener(ANFANG, beiAnfang)
+      clearTimeout(ruhe)
+      wurzelEl.removeAttribute('data-fahrt-sperre')
+      wurzelEl.style.removeProperty('--fahrt-ende')
       gsap.killTweensOf(texte)
       texte.forEach((text) => gsap.killTweensOf(text.querySelectorAll('[data-zeile], [data-rest]')))
       ctx.revert()
@@ -592,7 +519,10 @@ export default function Kamerafahrt() {
     return (
       <section id="ingresso" data-kopf="hell" className="fahrt fahrt--statisch" aria-label="Rundgang durch Nonnas Haus">
         {stationen.map((s, i) => (
-          <article key={s.id} className="station-statisch" aria-labelledby={s.zeilen.length ? `t-${s.id}` : undefined}
+          <article
+            key={s.id}
+            className="station-statisch"
+            aria-labelledby={s.zeilen.length ? `t-${s.id}` : undefined}
             aria-label={s.zeilen.length ? undefined : s.alt}
           >
             <img
@@ -611,32 +541,40 @@ export default function Kamerafahrt() {
   }
 
   return (
-    <section id="ingresso" data-kopf="hell" ref={wurzel} className="fahrt" aria-label="Rundgang durch Nonnas Haus">
-      <div className="fahrt-fotos">
-        <div className="fahrt-foto">
-          {/* Startbild, bis das Video geladen ist. */}
-          <img
-            src={stationen[0].foto}
-            alt={stationen[0].alt}
-            style={{ objectPosition: stationen[0].fokus }}
-            decoding="async"
-            fetchPriority="high"
-          />
-          <video ref={vorRef} className="fahrt-film" muted playsInline preload="none" aria-hidden="true" />
-          <video ref={rueckRef} className="fahrt-film" muted playsInline preload="none" aria-hidden="true" />
+    <section
+      id="ingresso"
+      data-kopf="hell"
+      ref={wurzel}
+      className="fahrt"
+      style={{ '--strecke': STRECKE + NACHLAUF } as CSSProperties}
+      aria-label="Rundgang durch Nonnas Haus"
+    >
+      <div className="fahrt-rahmen" ref={rahmenRef}>
+        <div className="fahrt-fotos">
+          <div className="fahrt-foto">
+            {/* Startbild, bis das Video geladen ist. */}
+            <img
+              src={stationen[0].foto}
+              alt={stationen[0].alt}
+              style={{ objectPosition: stationen[0].fokus }}
+              decoding="async"
+              fetchPriority="high"
+            />
+            <video ref={videoRef} className="fahrt-film" muted playsInline preload="none" aria-hidden="true" />
+          </div>
         </div>
-      </div>
-      <p className="fahrt-laden" data-bereit={ladestand.art === 'bereit'} role="status">
-        {ladestand.art === 'fehler'
-          ? 'Das Video konnte nicht geladen werden. Bitte die Seite neu laden.'
-          : ladestand.art === 'laedt'
-            ? `Kamerafahrt lädt …${ladestand.prozent === null ? '' : ` ${ladestand.prozent} %`}`
-            : 'Kamerafahrt bereit'}
-      </p>
-      <div className="fahrt-texte">
-        {stationen.map((s, i) => (
-          <Text s={s} erste={i === 0} key={s.id} />
-        ))}
+        <p className="fahrt-laden" data-bereit={ladestand.art === 'bereit'} role="status">
+          {ladestand.art === 'fehler'
+            ? 'Das Video konnte nicht geladen werden. Bitte die Seite neu laden.'
+            : ladestand.art === 'laedt'
+              ? `Kamerafahrt lädt …${ladestand.prozent === null ? '' : ` ${ladestand.prozent} %`}`
+              : 'Kamerafahrt bereit'}
+        </p>
+        <div className="fahrt-texte">
+          {stationen.map((s, i) => (
+            <Text s={s} erste={i === 0} key={s.id} />
+          ))}
+        </div>
       </div>
     </section>
   )

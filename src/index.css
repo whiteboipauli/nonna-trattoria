@@ -243,12 +243,27 @@ body {
 }
 
 /* ===== Rundgang: Vollbild-Fotos mit Text direkt darauf ===== */
+/* Hoher Abschnitt: Man scrollt --strecke Bildschirmlängen durch die Kamerafahrt. Kein overflow, sonst
+   greift sticky nicht. */
 .fahrt {
   position: relative;
-  height: 100svh;
-  overflow: hidden;
+  height: calc(100svh * (1 + var(--strecke, 4)));
   background: var(--grund);
   color: #fff;
+}
+/* Solange das Video das Ende noch nicht erreicht hat, endet die Seite am Ende der Kamerafahrt (Karte und
+   Fußzeile sind nicht erreichbar). Auf #root, nicht auf html oder body: Deren overflow wirkt auf den
+   Viewport. overflow: clip erzeugt keinen Scroll-Container, sticky und die feste Kopfzeile bleiben heil. */
+html[data-fahrt-sperre] #root {
+  max-height: var(--fahrt-ende);
+  overflow: clip;
+}
+/* Das feste Bild: bleibt oben stehen, Fotos, Texte und Ladeanzeige liegen darin. */
+.fahrt-rahmen {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: clip;
 }
 .fahrt-fotos,
 .fahrt-texte {

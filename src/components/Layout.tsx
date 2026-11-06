@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { ANFANG } from '../data/fahrt'
+import { ANFANG, ENDE } from '../data/fahrt'
 import { pfad } from '../lib/pfad'
 import Musik from './Musik'
 
@@ -30,6 +30,8 @@ export default function Layout() {
       window.dispatchEvent(new Event(ANFANG))
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } else if (hash) {
+      // Bewusstes Überspringen der Kamerafahrt: Sperre vorher lösen, sonst endet die Seite an der Fahrt.
+      window.dispatchEvent(new Event(ENDE))
       document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth' })
     } else {
       window.scrollTo(0, 0)

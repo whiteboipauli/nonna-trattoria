@@ -4,33 +4,35 @@ import { pfad } from '../lib/pfad'
 // (kamerafahrt-roh/kamerafahrt.mp4), aus dem npm run video eine Vorwärts- und eine Rückwärts-Datei
 // macht. Die Fotos 01 bis 09 sind Standbilder daraus: Startbild und Ansicht bei "reduzierter Bewegung".
 //
-// SO ARBEITET DIE FAHRT: Die Seite scrollt nicht, solange die Kamerafahrt im Bild ist. Eine Scroll-
-// Geste löst den Flug zum nächsten (oder vorigen) Haltepunkt aus, das Video läuft dann von selbst.
-// Gehalten wird nur bei Stationen mit `halt`, alle anderen werden ohne Halt durchflogen.
-// `ruhe: [ankunft, haltepunkt]` (Sekunden im Video, auf dem Bildraster): bei der Ankunft schreibt sich
-// der Text, am Haltepunkt bleibt das Bild stehen. Die Haltepunkte stehen auch in HALTE in
-// scripts/kamerafahrt-video.mjs (dort liegen Keyframes), beide Stellen müssen zusammenpassen.
-// `zeit` = Sekunde des Standbilds, danach richtet sich der Bildausschnitt (`fokus`). Gleiche Werte
-// wie STANDBILDER in scripts/kamerafahrt-video.mjs.
+// SO ARBEITET DIE FAHRT: Scrollposition = Videobild. Die Kamerafahrt steht fest im Bild (sticky), der
+// Abschnitt ist STRECKE Bildschirmlängen höher als das Bild. Wie weit man darin gescrollt hat, bestimmt
+// die Videozeit (VON_ZEIT bis BIS_ZEIT). Das Video wird nie abgespielt, nur geseekt, und folgt dem Ziel
+// mit Höchsttempo TEMPO_MAX. Danach scrollt die Seite normal weiter, und beim Hochscrollen spult das Video von selbst zurück.
+// `text: [von, bis]` (Sekunden im Video): In diesem Fenster ist der Text der Station zu sehen, immer nur
+// einer. `zeit` = Sekunde des Standbilds, danach richtet sich der Bildausschnitt (`fokus`). Gleiche
+// Werte wie STANDBILDER in scripts/kamerafahrt-video.mjs.
 
-// Mindestausschlag von Mausrad oder Trackpad (Pixel), ab dem eine Geste zählt.
-export const SCHWELLE = 24
-// Mindestweg beim Wischen am Touchscreen (Pixel).
-export const SCHWELLE_WISCHEN = 40
-// Ausschläge unter diesem Wert (Pixel) gelten als Ruhe, zum Beispiel das Auslaufen eines Trackpads.
-export const RAUSCHEN = 4
-// So lange muss die Eingabe ruhen (Sekunden), bevor eine neue Geste zählt.
-export const PAUSE = 0.15
-// Nach der Ankunft am Haltepunkt zählt frühestens so spät (Sekunden) die nächste Geste.
-export const SPERRE = 0.25
-// Tempo der Flüge, 1 = Originalgeschwindigkeit. Ein Tempo ungleich 1 oder ein Tempowechsel mitten im
-// Flug lässt den Browser Bilder auslassen und ruckeln, deshalb läuft die Fahrt immer mit 1.
-export const TEMPO = 1
-// Höchstens so lange (Sekunden) wartet ein Flug, bis das andere Video am richtigen Bild steht.
-export const PARTNER_WARTEN = 0.3
+// Wie viele weitere Bildschirmlängen die Zielzeit von VON_ZEIT bis BIS_ZEIT läuft.
+export const STRECKE = 4
+// Videozeit (Sekunden) am Anfang und am Ende der Strecke.
+export const VON_ZEIT = 1.25
+export const BIS_ZEIT = 21.0
+// Höchsttempo des Videos in Videosekunden pro echter Sekunde, vorwärts wie rückwärts. 1 = Normaltempo.
+export const TEMPO_MAX = 1
+// Je näher am Ziel, desto langsamer: Wunschtempo = Abstand (Sekunden) mal ANSATZ, höchstens TEMPO_MAX.
+export const ANSATZ = 3
+// Zeitkonstante (Sekunden), mit der das Tempo selbst auf- und abgebaut wird. Größer = träger.
+export const BESCHLEUNIGUNG = 0.25
+// Weitere Bildschirmlängen am Ende, in denen das Bild fest auf dem letzten Bild (Vino) steht, damit ein
+// hinterherhinkendes Video nicht weggescrollt wird.
+export const NACHLAUF = 0.5
+// So lange (Sekunden) muss die Zeit im neuen Textfenster sein, bevor der Text wechselt.
+export const TEXT_WARTEN = 0.15
 
 // Signal der Kopfzeile (Logo, "Trattoria della Nonna"): Kamerafahrt direkt auf Station 1 stellen.
 export const ANFANG = 'nonna:anfang'
+// Signal bei Anker-Navigation (zum Beispiel "La Carta"): Die Kamerafahrt darf bewusst übersprungen werden.
+export const ENDE = 'nonna:ende'
 
 export type Station = {
   id: string
@@ -48,10 +50,8 @@ export type Station = {
   fokus: string
   // Sekunde des Standbilds im Video.
   zeit: number
-  // Haltepunkt: Hier bleibt das Video stehen.
-  halt?: true
-  // Nur mit Halt: [ankunft, haltepunkt] in Sekunden.
-  ruhe?: [number, number]
+  // Fenster [von, bis] in Videosekunden, in dem der Text zu sehen ist.
+  text?: [number, number]
 }
 
 export const stationen: Station[] = [
@@ -63,8 +63,7 @@ export const stationen: Station[] = [
     alt: 'Mosaikboden am Eingang mit dem Schriftzug Trattoria Nonna',
     fokus: '50% 50%',
     zeit: 0.6,
-    halt: true,
-    ruhe: [1.25, 1.25],
+    text: [0, 2.6],
   },
   {
     id: 'saal',
@@ -84,8 +83,7 @@ export const stationen: Station[] = [
     alt: 'Gegrillter Oktopus auf einer Edelstahlplatte, Olivenöl wird darübergegossen',
     fokus: '50% 50%',
     zeit: 6.0,
-    halt: true,
-    ruhe: [5.25, 6.75],
+    text: [4.8, 7.0],
   },
   {
     id: 'teig',
@@ -114,8 +112,7 @@ export const stationen: Station[] = [
     alt: 'Gebackene Pizza auf dem Holzschieber mit Dampf',
     fokus: '50% 50%',
     zeit: 12.0,
-    halt: true,
-    ruhe: [11.5, 12.25],
+    text: [10.8, 13.0],
   },
   {
     id: 'pasta',
@@ -135,8 +132,7 @@ export const stationen: Station[] = [
     alt: 'Spaghetti mit Langustinen am Pass unter der Kupferlampe',
     fokus: '50% 50%',
     zeit: 16.1,
-    halt: true,
-    ruhe: [15.25, 16.5],
+    text: [14.8, 17.0],
   },
   {
     id: 'vini',
@@ -147,7 +143,6 @@ export const stationen: Station[] = [
     alt: 'Kellner schenkt am Fenstertisch Rotwein neben dem Pastateller ein',
     fokus: '50% 55%',
     zeit: 20.5,
-    halt: true,
-    ruhe: [20.0, 21.0],
+    text: [20.0, Infinity],
   },
 ]
